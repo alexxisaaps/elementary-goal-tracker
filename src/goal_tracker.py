@@ -9,7 +9,7 @@ import random
 from datetime import datetime
 
 APP_NAME = "Goal Tracker"
-APP_VERSION = "0.2.10.4"
+APP_VERSION = "0.2.10.6"
 
 class GoalWindow(Adw.ApplicationWindow):
     def __init__(self, *args, **kwargs):
@@ -1535,7 +1535,7 @@ class AboutDialog(Gtk.Dialog):
             print(f"Error opening URL: {e.message}")
     
     def on_donate_clicked(self, button):
-        url = "https://example.com/donate"
+        url = "#"
         self.open_url(url)
 
     def _on_response(self, button, response):
