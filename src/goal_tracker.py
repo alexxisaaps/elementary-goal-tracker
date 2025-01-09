@@ -9,7 +9,7 @@ import random
 from datetime import datetime
 
 APP_NAME = "Goal Tracker"
-APP_VERSION = "0.2.10.6"
+APP_VERSION = "1.0"
 
 class GoalWindow(Adw.ApplicationWindow):
     def __init__(self, *args, **kwargs):
