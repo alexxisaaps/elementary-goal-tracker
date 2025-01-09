@@ -9,7 +9,7 @@ import random
 from datetime import datetime
 
 APP_NAME = "Goal Tracker"
-APP_VERSION = "1.0"
+APP_VERSION = "1.0.1"
 
 class GoalWindow(Adw.ApplicationWindow):
     def __init__(self, *args, **kwargs):
@@ -1285,20 +1285,54 @@ class DailyQuote:
         self.last_date = None
         
     def load_quotes(self):
+        """Load quotes from the system or user directory."""
+        # Try user directory first
+        user_quotes = os.path.join(GLib.get_user_data_dir(), 'goaltracker', 'quotes.json')
+        # System directory as fallback
+        system_quotes = os.path.join('/usr/share/goaltracker', 'quotes.json')
+        
+        # Default quote in case everything fails
+        default_quotes = {
+            "quotes": [
+                {
+                    "text": "Set your goals high and don't stop till you get there.",
+                    "author": "Bo Jackson"
+                }
+            ]
+        }
+
         try:
-            with open(self.quotes_file, 'r') as f:
-                return json.load(f)['quotes']
-        except FileNotFoundError:
-            return [{"text": "Set your goals high and don't stop till you get there.", "author": "Bo Jackson"}]
+            # Try user directory first
+            if os.path.exists(user_quotes):
+                with open(user_quotes, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    return data['quotes']
+            # Try system directory next
+            elif os.path.exists(system_quotes):
+                with open(system_quotes, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    return data['quotes']
+            else:
+                print("No quotes file found, using default quote")
+                return default_quotes['quotes']
+        except Exception as e:
+            print(f"Error loading quotes: {e}")
+            return default_quotes['quotes']
     
     def get_daily_quote(self):
         today = datetime.now().date()
         
         if self.last_date != today or self.current_quote is None:
-            quotes = self.load_quotes()
+            quotes_list = self.load_quotes()
+            if not quotes_list:  # If quotes list is empty
+                quotes_list = [{
+                    "text": "Set your goals high and don't stop till you get there.",
+                    "author": "Bo Jackson"
+                }]
+            
             # Use the date as a seed to get the same quote throughout the day
             random.seed(today.strftime("%Y%m%d"))
-            self.current_quote = random.choice(quotes)
+            self.current_quote = random.choice(quotes_list)
             self.last_date = today
             
         return self.current_quote
@@ -1593,6 +1627,7 @@ def main():
     try:
         import os
         import sys
+        import shutil
         from pathlib import Path
         
         # Set up user data directory
@@ -1603,11 +1638,14 @@ def main():
         # Change to user data directory for file operations
         os.chdir(user_data_dir)
         
+        # System installed quotes file
+        system_quotes = '/usr/share/goaltracker/quotes.json'
+        user_quotes = os.path.join(user_data_dir, 'quotes.json')
+        
         # Create initial files if they don't exist
         default_files = {
             'lists.json': '{}',
-            'settings.json': '{"auto_reorder_completed": false}',
-            'quotes.json': '{"quotes": [{"text": "Set your goals high and don\'t stop till you get there.", "author": "Bo Jackson"}]}'
+            'settings.json': '{"auto_sort_items": false}'
         }
         
         for filename, default_content in default_files.items():
@@ -1616,6 +1654,11 @@ def main():
                 with open(filepath, 'w') as f:
                     f.write(default_content)
                 os.chmod(filepath, 0o644)
+        
+        # Copy system quotes to user directory if it doesn't exist
+        if not os.path.exists(user_quotes) and os.path.exists(system_quotes):
+            shutil.copy2(system_quotes, user_quotes)
+            os.chmod(user_quotes, 0o644)
         
         # Initialize app
         app = GoalApplication()

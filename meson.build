@@ -20,6 +20,12 @@ install_data(
     install_dir: pkgdatadir
 )
 
+# Install quotes.json
+install_data(
+    'quotes.json',
+    install_dir: pkgdatadir
+)
+
 # Configure the launcher script
 conf_data = configuration_data()
 conf_data.set('PYTHON', find_program('python3').full_path())

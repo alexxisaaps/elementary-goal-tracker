@@ -62,6 +62,15 @@
   </content_rating>
 
   <releases>
+    <release version="1.0.1" date="2024-01-09">
+      <description>
+        <p>Bug fixes:</p>
+        <ul>
+          <li>Fixed daily motivational quotes not loading properly</li>
+          <li>Improved quotes system with better fallback handling</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.0.0" date="2024-01-08">
       <description>
         <p>Initial release</p>
