@@ -1,0 +1,22 @@
+id: io.elementary.goaltracker
+
+runtime: io.elementary.Platform
+runtime-version: '8'
+sdk: io.elementary.Sdk
+
+command: io.elementary.goaltracker
+
+finish-args:
+  - '--share=ipc'
+  - '--socket=fallback-x11'
+  - '--socket=wayland'
+  - '--filesystem=xdg-data/goaltracker:create'
+  - '--filesystem=xdg-config/goaltracker:create'
+  - '--filesystem=xdg-cache/goaltracker:create'
+
+modules:
+  - name: goaltracker
+    buildsystem: meson
+    sources:
+      - type: dir
+        path: .
