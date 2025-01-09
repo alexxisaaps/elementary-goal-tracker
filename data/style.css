@@ -1,0 +1,448 @@
+@define-color accent_color #ff7043;
+@define-color accent_color_hover #f4511e;
+
+window {
+    background-color: @theme_bg_color;
+    color: @theme_fg_color;
+}
+
+headerbar {
+    min-height: 32px;
+    padding: 0;
+}
+
+headerbar > * {
+    margin: 2px 4px;
+}
+
+headerbar button {
+    min-height: 24px;
+    padding: 2px 10px;
+}
+
+.sidebar {
+    background-color: alpha(@theme_fg_color, 0.02);
+    border-right: 1px solid alpha(@theme_fg_color, 0.1);
+}
+
+.sidebar-header {
+    padding: 16px;
+    border-bottom: 1px solid alpha(@theme_fg_color, 0.1);
+    background-color: transparent;
+}
+
+.sidebar-title {
+    font-weight: 600;
+    font-size: 16px;
+    padding: 4px 8px;
+}
+
+.lists-box {
+    background: transparent;
+}
+
+.list-row {
+    padding: 12px 16px;
+    border-bottom: 1px solid alpha(@theme_fg_color, 0.05);
+    margin: 0;
+}
+
+.list-row:hover {
+    background-color: alpha(@theme_fg_color, 0.05);
+}
+
+row:selected {
+    background-color: alpha(@accent_color, 0.2);
+}
+
+row:selected .list-row {
+    background-color: transparent;
+}
+
+.sidebar-separator {
+    margin: 0;
+    background-color: alpha(@theme_fg_color, 0.08);
+    min-width: 1px;
+}
+
+paned {
+    background-color: @theme_bg_color;
+}
+
+paned > separator {
+    background-color: alpha(@theme_fg_color, 0.08);
+    min-width: 1px;
+    min-height: 1px;
+}
+
+paned > separator.wide {
+    min-width: 2px;
+    min-height: 2px;
+    background-color: alpha(@theme_fg_color, 0.08);
+}
+
+paned > separator:hover {
+    background-color: alpha(@theme_fg_color, 0.15);
+}
+
+.goal-row {
+    margin: 0 16px 12px 16px;
+    padding: 12px 16px;
+    border-radius: 6px;
+    background-color: alpha(@theme_fg_color, 0.03);
+    border: none;
+}
+
+.step-row {
+    margin: 0 16px 8px 48px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    background-color: alpha(@theme_fg_color, 0.02);
+    border: none;
+}
+
+.goal-row:hover {
+    background-color: alpha(@theme_fg_color, 0.05);
+}
+
+.step-row:hover {
+    background-color: alpha(@theme_fg_color, 0.04);
+}
+
+.goal-row, .step-row {
+    transition: background-color 200ms ease;
+}
+
+.goal-label {
+    margin: 0 10px;
+    color: @theme_fg_color;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.step-label {
+    margin: 0 10px;
+    color: @theme_fg_color;
+    font-size: 13px;
+}
+
+.completed {
+    color: alpha(@theme_fg_color, 0.5);
+    text-decoration: line-through;
+    font-weight: normal;
+}
+
+checkbutton {
+    margin: 0 4px;
+    transition: all 200ms ease;
+}
+
+checkbutton check {
+    min-height: 18px;
+    min-width: 18px;
+    border: 2px solid alpha(@theme_fg_color, 0.3);
+    border-radius: 4px;
+    transition: all 200ms ease;
+    background-color: transparent;
+}
+
+checkbutton:hover check {
+    border-color: @accent_color;
+}
+
+checkbutton:checked check {
+    background-color: @accent_color;
+    border-color: @accent_color;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path fill='%23ffffff' d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/></svg>");
+    background-size: 14px 14px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+dialog {
+    background-color: @theme_bg_color;
+    border: 1px solid alpha(@theme_fg_color, 0.1);
+    border-radius: 12px;
+}
+
+dialog headerbar {
+    background-color: @theme_bg_color;
+    border-bottom: 1px solid alpha(@theme_fg_color, 0.1);
+    padding: 8px;
+}
+
+entry {
+    background-color: alpha(@theme_fg_color, 0.05);
+    border: 1px solid alpha(@theme_fg_color, 0.1);
+    border-radius: 8px;
+    padding: 8px;
+    color: @theme_fg_color;
+}
+
+entry:focus {
+    background-color: @theme_bg_color;
+    border-color: @accent_color;
+}
+
+.button-box {
+    margin-left: auto;
+}
+
+.action-button {
+    min-width: 70px;
+    padding: 0 8px;
+    min-height: 24px;
+}
+
+button.flat {
+    min-height: 24px;
+    min-width: 24px;
+    padding: 2px;
+    margin: 0;
+    border: none;
+    background: none;
+    color: alpha(@theme_fg_color, 0.8);
+}
+
+button.flat:hover {
+    background-color: alpha(@theme_fg_color, 0.1);
+    color: @theme_fg_color;
+}
+
+button.suggested-action {
+    background-color: @accent_color;
+    color: white;
+    border: none;
+    font-weight: 500;
+    padding: 6px 14px;
+    transition: all 150ms ease;
+}
+
+button.suggested-action:hover {
+    background-color: @accent_color_hover;
+}
+
+.help-button {
+    background: none;
+    border: none;
+    box-shadow: none;
+    color: alpha(@theme_fg_color, 0.8);
+    padding: 4px 8px;
+    min-height: 24px;
+}
+
+.help-button:hover {
+    background-color: alpha(@theme_fg_color, 0.05);
+    color: @theme_fg_color;
+}
+
+.delete-button {
+    color: @error_color;
+    background: alpha(@error_color, 0.12);
+    border: none;
+}
+
+.delete-button:hover {
+    background: alpha(@error_color, 0.2);
+}
+
+button.flat.trash-icon {
+    color: @error_color;
+}
+
+button.flat.trash-icon:hover {
+    background: alpha(@error_color, 0.1);
+    color: mix(@error_color, @theme_fg_color, 0.8);
+}
+
+/* About Dialog Styles */
+.about-dialog-box {
+    background-color: @theme_bg_color;
+    min-width: 350px;
+}
+
+.about-section {
+    padding: 8px 0;
+    margin: 0 auto;
+    min-width: 300px;
+}
+
+.app-info-section {
+    margin-bottom: 8px;
+}
+
+.about-section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: @theme_fg_color;
+}
+
+.app-info-section .about-section-title {
+    font-size: 24px;
+}
+
+.about-section-content {
+    color: alpha(@theme_fg_color, 0.8);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0 16px;
+}
+
+.link-button {
+    color: @accent_color;
+    background: none;
+    border: 1px solid @accent_color;
+    border-radius: 6px;
+    padding: 8px 16px;
+    transition: all 200ms ease;
+    margin: 8px 0;
+}
+
+.link-button:hover {
+    background-color: alpha(@accent_color, 0.1);
+}
+
+.about-separator {
+    margin: 16px 0;
+    background-color: alpha(@theme_fg_color, 0.1);
+    min-height: 1px;
+}
+
+.donate-button {
+    background-color: @accent_color;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    margin-top: 8px;
+    font-weight: 500;
+    transition: all 200ms ease;
+}
+
+.donate-button:hover {
+    background-color: @accent_color_hover;
+}
+
+.empty-state-box {
+    margin: 48px 24px;
+    padding: 48px;
+    border-radius: 12px;
+    background-color: alpha(@theme_fg_color, 0.02);
+}
+
+.empty-state-title {
+    color: @theme_fg_color;
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.empty-state-description {
+    color: alpha(@theme_fg_color, 0.8);
+    font-size: 14px;
+}
+
+.goals-container {
+    margin-top: 8px;
+}
+
+.goals-header {
+    margin: 24px 16px 16px 16px;
+    padding: 0;
+}
+
+.goals-header-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: @theme_fg_color;
+}
+
+.goal-number {
+    margin-right: 8px;
+    color: alpha(@theme_fg_color, 0.8);
+    font-weight: 500;
+}
+
+.step-number {
+    margin-right: 8px;
+    color: alpha(@theme_fg_color, 0.8);
+    font-weight: normal;
+}
+
+.quote-section {
+    background: alpha(@theme_fg_color, 0.05);
+    padding: 32px;
+    margin: 24px 24px 32px 24px;
+    border-radius: 12px;
+}
+
+.quote-text {
+    color: @theme_fg_color;
+    font-family: 'Georgia', serif;
+    margin-bottom: 12px;
+    font-style: italic;
+}
+
+.quote-author {
+    color: alpha(@theme_fg_color, 0.8);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.deadline-box {
+    margin: 0 8px;
+}
+
+.deadline-label {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.deadline-overdue {
+    background-color: alpha(@error_color, 0.15);
+    color: @error_color;
+}
+
+.deadline-today {
+    background-color: alpha(@warning_color, 0.15);
+    color: @warning_color;
+}
+
+.deadline-upcoming {
+    background-color: alpha(@success_color, 0.15);
+    color: @success_color;
+}
+
+.deadline-completed {
+    background-color: alpha(@success_color, 0.15);
+    color: @success_color;
+}
+
+.step-row .deadline-label {
+    font-size: 11px;
+    padding: 3px 10px;
+}
+
+/* Settings Dialog Styles */
+.setting-row {
+    padding: 12px;
+    border-radius: 6px;
+    transition: background-color 200ms ease;
+}
+
+.setting-row:hover {
+    background-color: alpha(@theme_fg_color, 0.05);
+}
+
+.setting-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: @theme_fg_color;
+}
+
+.setting-description {
+    font-size: 13px;
+    color: alpha(@theme_fg_color, 0.8);
+    margin-top: 2px;
+}

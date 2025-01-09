@@ -1,0 +1,18 @@
+# User data
+lists.json
+goals.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.class
+venv/
+
+# Build directories
+build/
+dist/
+*.egg-info/
+
+# IDE settings
+.vscode/
+.idea/

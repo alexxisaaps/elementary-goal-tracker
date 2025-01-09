@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Ensure user data directories exist
+mkdir -p "$HOME/.local/share/goaltracker"
+mkdir -p "$HOME/.cache/goaltracker"
+mkdir -p "$HOME/.config/goaltracker"
+
+# Set environment variables
+export GOAL_TRACKER_DATADIR="@PKGDATADIR@"
+export PYTHONPATH="@PKGDATADIR@:$PYTHONPATH"
+
+# Change to user data directory
+cd "$HOME/.local/share/goaltracker"
+
+# Execute app
+exec "@PYTHON@" "@PKGDATADIR@/goal_tracker.py" "$@"
