@@ -23,6 +23,7 @@ headerbar button {
 .sidebar {
     background-color: alpha(@theme_fg_color, 0.02);
     border-right: 1px solid alpha(@theme_fg_color, 0.1);
+    min-width: 200px;
 }
 
 .sidebar-header {
@@ -47,42 +48,12 @@ headerbar button {
     margin: 0;
 }
 
-.list-row:hover {
-    background-color: alpha(@theme_fg_color, 0.05);
-}
-
 row:selected {
     background-color: alpha(@accent_color, 0.2);
 }
 
 row:selected .list-row {
     background-color: transparent;
-}
-
-.sidebar-separator {
-    margin: 0;
-    background-color: alpha(@theme_fg_color, 0.08);
-    min-width: 1px;
-}
-
-paned {
-    background-color: @theme_bg_color;
-}
-
-paned > separator {
-    background-color: alpha(@theme_fg_color, 0.08);
-    min-width: 1px;
-    min-height: 1px;
-}
-
-paned > separator.wide {
-    min-width: 2px;
-    min-height: 2px;
-    background-color: alpha(@theme_fg_color, 0.08);
-}
-
-paned > separator:hover {
-    background-color: alpha(@theme_fg_color, 0.15);
 }
 
 .goal-row {
@@ -190,7 +161,7 @@ entry:focus {
 
 .action-button {
     min-width: 70px;
-    padding: 0 8px;
+    padding: 8px;
     min-height: 24px;
 }
 
@@ -263,7 +234,7 @@ button.flat.trash-icon:hover {
 
 .about-section {
     padding: 8px 0;
-    margin: 0 auto;
+    margin: 0;
     min-width: 300px;
 }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>io.elementary.goaltracker</id>
+  <id>io.github.alexxisaapps.elementary_goal_tracker</id>
   <name>Goal Tracker</name>
   <summary>Track and manage your goals efficiently</summary>
   <metadata_license>CC0-1.0</metadata_license>
@@ -18,7 +18,7 @@
     </ul>
   </description>
 
-  <launchable type="desktop-id">io.elementary.goaltracker.desktop</launchable>
+  <launchable type="desktop-id">io.github.alexxisaapps.elementary_goal_tracker.desktop</launchable>
   
   <screenshots>
       <screenshot type="default">

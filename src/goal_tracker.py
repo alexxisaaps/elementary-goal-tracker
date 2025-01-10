@@ -2,14 +2,17 @@
 import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
-from gi.repository import Gtk, GLib, GObject, Gdk, Pango, Adw, Gio
+gi.require_version('Granite', '7.0')
+from gi.repository import Gtk, GLib, GObject, Gdk, Pango, Adw, Gio, Granite
 import json
 import os
+import sys
+import shutil
 import random
 from datetime import datetime
 
 APP_NAME = "Goal Tracker"
-APP_VERSION = "1.0.1"
+APP_VERSION = "1.1.0"
 
 class GoalWindow(Adw.ApplicationWindow):
     def __init__(self, *args, **kwargs):
@@ -28,9 +31,6 @@ class GoalWindow(Adw.ApplicationWindow):
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         main_box.set_size_request(800, -1)
         self.set_content(main_box)
-
-        # Load CSS
-        self.load_css()
         
         # HeaderBar
         header_bar = Adw.HeaderBar()
@@ -57,18 +57,21 @@ class GoalWindow(Adw.ApplicationWindow):
         
         # Main paned container
         paned = Gtk.Paned(orientation=Gtk.Orientation.HORIZONTAL)
-        paned.set_resize_start_child(False)
+        paned.set_resize_start_child(True)
         paned.set_shrink_start_child(False)
+        paned.set_shrink_end_child(False)
         paned.set_wide_handle(True)
         main_box.append(paned)
-        
+
         # Sidebar
         sidebar = self.create_sidebar()
+        sidebar.set_size_request(200, -1)
         paned.set_start_child(sidebar)
-        
+                
         # Content area
         self.content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.content_box.set_hexpand(True)
+        self.content_box.set_size_request(400, -1)
         paned.set_end_child(self.content_box)
         
         # Set initial position
@@ -124,23 +127,6 @@ class GoalWindow(Adw.ApplicationWindow):
         else:
             # No lists exist yet, update empty state
             self.update_empty_state()
-
-    # CSS styling
-    def load_css(self):
-        """Load CSS from external file"""
-        css_provider = Gtk.CssProvider()
-        try:
-            install_dir = os.getenv('GOAL_TRACKER_DATADIR', '/usr/share/goaltracker')
-            css_path = os.path.join(install_dir, 'style.css')
-            
-            css_provider.load_from_path(css_path)
-            Gtk.StyleContext.add_provider_for_display(
-                Gdk.Display.get_default(),
-                css_provider,
-                Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-            )
-        except GLib.Error as e:
-            print(f"Error loading CSS: {e.message}")
             
     def create_sidebar(self):
         """Create the sidebar for list management"""
@@ -543,7 +529,7 @@ class GoalWindow(Adw.ApplicationWindow):
 
 class ListManager:
     def __init__(self):
-        self.data_dir = os.path.expanduser('~/.local/share/goaltracker')
+        self.data_dir = os.path.join(GLib.get_user_data_dir(), 'goaltracker')
         os.makedirs(self.data_dir, exist_ok=True)
         self.lists_file = os.path.join(self.data_dir, 'lists.json')
         self.lists = {}
@@ -1278,7 +1264,7 @@ class GoalDialog(Gtk.Dialog):
         
 class DailyQuote:
     def __init__(self):
-        self.data_dir = os.path.expanduser('~/.local/share/goaltracker')
+        self.data_dir = os.path.join(GLib.get_user_data_dir(), 'goaltracker')
         os.makedirs(self.data_dir, exist_ok=True)
         self.quotes_file = os.path.join(self.data_dir, 'quotes.json')
         self.current_quote = None
@@ -1289,7 +1275,7 @@ class DailyQuote:
         # Try user directory first
         user_quotes = os.path.join(GLib.get_user_data_dir(), 'goaltracker', 'quotes.json')
         # System directory as fallback
-        system_quotes = os.path.join('/usr/share/goaltracker', 'quotes.json')
+        system_quotes = os.path.join(GLib.get_system_data_dirs()[0], 'goaltracker', 'quotes.json')
         
         # Default quote in case everything fails
         default_quotes = {
@@ -1378,7 +1364,7 @@ class ConfirmDialog(Gtk.Dialog):
 
 class Settings:
     def __init__(self):
-        self.data_dir = os.path.expanduser('~/.local/share/goaltracker')
+        self.data_dir = os.path.join(GLib.get_user_data_dir(), 'goaltracker')
         os.makedirs(self.data_dir, exist_ok=True)
         self.settings_file = os.path.join(self.data_dir, 'settings.json')
         self.default_settings = {
@@ -1599,17 +1585,45 @@ class AboutDialog(Gtk.Dialog):
 class GoalApplication(Adw.Application):
     def __init__(self):
         super().__init__(
-            application_id='io.elementary.goaltracker',
+            application_id='io.github.alexxisaapps.elementary_goal_tracker',
             flags=Gio.ApplicationFlags.FLAGS_NONE
         )
         
-        # Set GtkApplication name for proper window class
         GLib.set_application_name("Goal Tracker")
         
     def do_startup(self):
+        # Initialize Granite
+        Granite.init()
+        
+        # Initialize parent
         Adw.Application.do_startup(self)
         
-        # Set up style manager for the application
+        try:
+            # Load GResource file
+            resource_path = '/usr/share/goaltracker/resources.gresource'
+            
+            if os.path.exists(resource_path):
+                resource = Gio.Resource.load(resource_path)
+                resource._register()
+                
+                # Load CSS provider manually
+                css_provider = Gtk.CssProvider()
+                css_path = "/io/github/alexxisaapps/elementary_goal_tracker/style.css"
+                
+                bytes = Gio.resources_lookup_data(css_path, 0)
+                css_provider.load_from_data(bytes.get_data())
+                
+                Gtk.StyleContext.add_provider_for_display(
+                    Gdk.Display.get_default(),
+                    css_provider,
+                    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+                )
+        except Exception as e:
+            print(f"Error loading resources: {e}")
+            import traceback
+            traceback.print_exc()
+            
+        # Set up style manager
         style_manager = Adw.StyleManager.get_default()
         style_manager.set_color_scheme(Adw.ColorScheme.PREFER_LIGHT)
         
@@ -1625,21 +1639,23 @@ class GoalApplication(Adw.Application):
 
 def main():
     try:
-        import os
-        import sys
-        import shutil
-        from pathlib import Path
-        
-        # Set up user data directory
+        # Set up user data directory using GLib
         app_name = "goaltracker"
-        user_data_dir = os.path.join(str(Path.home()), ".local", "share", app_name)
+        user_data_dir = os.path.join(GLib.get_user_data_dir(), app_name)
+        user_cache_dir = os.path.join(GLib.get_user_cache_dir(), app_name)
+        user_config_dir = os.path.join(GLib.get_user_config_dir(), app_name)
+        
+        # Create necessary directories
         os.makedirs(user_data_dir, exist_ok=True)
+        os.makedirs(user_cache_dir, exist_ok=True)
+        os.makedirs(user_config_dir, exist_ok=True)
         
         # Change to user data directory for file operations
         os.chdir(user_data_dir)
         
-        # System installed quotes file
-        system_quotes = '/usr/share/goaltracker/quotes.json'
+        # System installed quotes file (using first system data dir)
+        system_data_dir = GLib.get_system_data_dirs()[0]
+        system_quotes = os.path.join(system_data_dir, 'goaltracker', 'quotes.json')
         user_quotes = os.path.join(user_data_dir, 'quotes.json')
         
         # Create initial files if they don't exist
@@ -1662,7 +1678,7 @@ def main():
         
         # Initialize app
         app = GoalApplication()
-        return app.run(None)
+        return app.run(sys.argv)
         
     except Exception as e:
         import traceback

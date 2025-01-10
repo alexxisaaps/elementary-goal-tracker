@@ -1,12 +1,12 @@
 # Install desktop file
 install_data(
-    'io.elementary.goaltracker.desktop',
+    'io.github.alexxisaapps.elementary_goal_tracker.desktop',
     install_dir: get_option('datadir') / 'applications'
 )
 
 # Install metainfo file
 install_data(
-    'io.elementary.goaltracker.metainfo.xml',
+    'io.github.alexxisaapps.elementary_goal_tracker.metainfo.xml',
     install_dir: get_option('datadir') / 'metainfo'
 )
 

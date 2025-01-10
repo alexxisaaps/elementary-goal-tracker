@@ -1,18 +1,15 @@
-id: io.elementary.goaltracker
+id: io.github.alexxisaapps.elementary_goal_tracker
 
 runtime: io.elementary.Platform
 runtime-version: '8'
 sdk: io.elementary.Sdk
 
-command: io.elementary.goaltracker
+command: io.github.alexxisaapps.elementary_goal_tracker
 
 finish-args:
   - '--share=ipc'
   - '--socket=fallback-x11'
   - '--socket=wayland'
-  - '--filesystem=xdg-data/goaltracker:create'
-  - '--filesystem=xdg-config/goaltracker:create'
-  - '--filesystem=xdg-cache/goaltracker:create'
 
 modules:
   - name: goaltracker

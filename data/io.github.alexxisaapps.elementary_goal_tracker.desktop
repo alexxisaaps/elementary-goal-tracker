@@ -1,12 +1,12 @@
 [Desktop Entry]
 Name=Goal Tracker
 Comment=Track your goals and tasks
-Exec=/usr/bin/io.elementary.goaltracker
-Icon=io.elementary.goaltracker
+Exec=/usr/bin/io.github.alexxisaapps.elementary_goal_tracker
+Icon=io.github.alexxisaapps.elementary_goal_tracker
 Terminal=false
 Type=Application
 Categories=Utility;GTK;Office;ProjectManagement;
 Keywords=Goals;Tasks;Tracker;Todo;
 StartupWMClass=goal-tracker
-X-GNOME-Gettext-Domain=io.elementary.goaltracker
+X-GNOME-Gettext-Domain=io.github.alexxisaapps.elementary_goal_tracker
 X-GNOME-UsesNotifications=false
