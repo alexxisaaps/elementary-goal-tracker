@@ -62,6 +62,17 @@
   </content_rating>
 
   <releases>
+    <release version="1.2.1" date="2024-01-12">
+      <description>
+        <p>UI improvements and dialog enhancements:</p>
+        <ul>
+          <li>Added text selection in goals and steps</li>
+          <li>Streamlined settings dialog</li>
+          <li>Added bug reporting section</li>
+          <li>Fixed dialog sizing issues</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.2.0" date="2024-01-12">
       <description>
         <p>Major code reorganization and improvements:</p>

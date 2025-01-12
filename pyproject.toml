@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "goal-tracker"
+version = "1.2.1"
+description = "A goal tracking application for elementary OS"
+requires-python = ">=3.8"
+authors = [
+    {name = "Alexis Peña", email = "alexxis.aaps11@outlook.com"},
+]
+
+[tool.setuptools]
+packages = ["src"]

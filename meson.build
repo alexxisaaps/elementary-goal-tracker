@@ -1,5 +1,5 @@
 project('io.github.alexxisaapps.elementary_goal_tracker',
-        version: '1.2.0',
+        version: '1.2.1',
         meson_version: '>= 0.57.0'
 )
 
