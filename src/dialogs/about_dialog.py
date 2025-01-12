@@ -76,6 +76,25 @@ class AboutDialog(Gtk.Dialog):
         separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         separator.add_css_class('about-separator')
         main_box.append(separator)
+
+        # Bug Reporting Section
+        bugs_section = self.create_section(
+            "Report Issues",
+            ["Found a bug? Have a suggestion?\nPlease report it on GitHub to help improve Goal Tracker!"]
+        )
+        main_box.append(bugs_section)
+        
+        # Report Button
+        report_button = Gtk.Button(label="Report an Issue")
+        report_button.add_css_class('link-button')
+        report_button.connect('clicked', lambda _: self.open_url("https://github.com/alexxisaaps/elementary-goal-tracker/issues"))
+        report_button.set_halign(Gtk.Align.CENTER)
+        bugs_section.append(report_button)
+
+        # Add a separator before the donate section
+        separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
+        separator.add_css_class('about-separator')
+        main_box.append(separator)
         
         # Donate Button
         donate_button = Gtk.Button(label="💜 Support Goal Tracker")

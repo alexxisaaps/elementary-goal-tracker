@@ -1,5 +1,7 @@
 from gi.repository import Gtk, Adw
 
+from gi.repository import Gtk, Adw
+
 class SettingsDialog(Gtk.Dialog):
     """Dialog for application settings"""
     
@@ -12,30 +14,31 @@ class SettingsDialog(Gtk.Dialog):
         )
 
         self.settings = settings
-        self.set_default_size(500, -1)
+        # Set a more appropriate default size
+        self.set_default_size(460, 400)
+        self.set_size_request(400, -1)  # Minimum width but natural height
         
         # Header Bar
         header_bar = Gtk.HeaderBar()
         header_bar.set_show_title_buttons(False)
         self.set_titlebar(header_bar)
         
-        # Reset button
-        reset_button = Gtk.Button(label="Reset All")
-        reset_button.add_css_class('destructive-action')
-        reset_button.connect('clicked', self.on_reset_clicked)
-        header_bar.pack_start(reset_button)
-        
         # Close button
         close_button = Gtk.Button(label="Close")
         close_button.connect("clicked", self._on_response, Gtk.ResponseType.OK)
         header_bar.pack_end(close_button)
         
-        # Content
+        # Main Content Area
+        content_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        self.set_child(content_box)
+        
+        # Scrolled Window
         scrolled = Gtk.ScrolledWindow()
         scrolled.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        self.set_child(scrolled)
+        scrolled.set_vexpand(True)  # Allow vertical expansion
+        content_box.append(scrolled)
         
-        # Main box
+        # Main box for settings
         main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=24)
         main_box.set_margin_top(24)
         main_box.set_margin_bottom(24)
@@ -55,34 +58,6 @@ class SettingsDialog(Gtk.Dialog):
         )
         behavior_section.append(auto_sort_row)
         
-        # Notifications section
-        notifications_section = self.create_section("Notifications")
-        main_box.append(notifications_section)
-        
-        # Enable notifications setting
-        notifications_row = self.create_setting_row(
-            "Enable Notifications",
-            "Show notifications for upcoming deadlines",
-            'enable_notifications'
-        )
-        notifications_section.append(notifications_row)
-        
-        # Deadline reminder setting
-        deadline_box = self.create_spinbutton_row(
-            "Default Reminder",
-            "Days before deadline to show notification",
-            'default_deadline_reminder',
-            1,  # min value
-            7,  # max value
-            1   # step
-        )
-        deadline_box.set_sensitive(self.settings.get('enable_notifications'))
-        notifications_section.append(deadline_box)
-        
-        # Connect notification toggle to deadline spinner sensitivity
-        self.deadline_box = deadline_box
-        notifications_row.get_first_child().connect('notify::active', self.on_notifications_toggled)
-        
         # Appearance section
         appearance_section = self.create_section("Appearance")
         main_box.append(appearance_section)
@@ -90,6 +65,9 @@ class SettingsDialog(Gtk.Dialog):
         # Theme selector
         theme_box = self.create_theme_selector()
         appearance_section.append(theme_box)
+
+        # Show all content immediately
+        self.show()
 
     def create_section(self, title):
         """Create a settings section with title"""
@@ -151,53 +129,6 @@ class SettingsDialog(Gtk.Dialog):
         
         return row
 
-    def create_spinbutton_row(self, title, description, setting_key, min_value, max_value, step):
-        """Create a row for a numeric setting"""
-        row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
-        row.add_css_class('setting-row')
-        
-        # Labels box
-        labels_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
-        labels_box.set_hexpand(True)
-        row.append(labels_box)
-        
-        # Title
-        title_label = Gtk.Label(label=title)
-        title_label.add_css_class('setting-title')
-        title_label.set_halign(Gtk.Align.START)
-        labels_box.append(title_label)
-        
-        # Description
-        description_label = Gtk.Label(label=description)
-        description_label.add_css_class('setting-description')
-        description_label.set_wrap(True)
-        description_label.set_xalign(0)
-        labels_box.append(description_label)
-        
-        # Spin button
-        adjustment = Gtk.Adjustment(
-            value=self.settings.get(setting_key),
-            lower=min_value,
-            upper=max_value,
-            step_increment=step
-        )
-        
-        spin = Gtk.SpinButton()
-        spin.set_adjustment(adjustment)
-        spin.set_numeric(True)
-        spin.connect('value-changed', self._on_spin_changed, setting_key)
-        row.append(spin)
-        
-        # Reset button (only shown if setting is modified)
-        if self.settings.is_modified(setting_key):
-            reset_button = Gtk.Button()
-            reset_button.set_icon_name('edit-undo-symbolic')
-            reset_button.add_css_class('flat')
-            reset_button.connect('clicked', self.on_reset_setting, setting_key, spin)
-            row.append(reset_button)
-        
-        return row
-
     def create_theme_selector(self):
         """Create the theme selection row"""
         row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
@@ -243,10 +174,6 @@ class SettingsDialog(Gtk.Dialog):
         """Handle boolean setting toggle"""
         self.settings.set(setting_key, button.get_active())
     
-    def _on_spin_changed(self, spin, setting_key):
-        """Handle numeric setting change"""
-        self.settings.set(setting_key, spin.get_value_as_int())
-    
     def _on_theme_changed(self, combo):
         """Handle theme selection change"""
         self.settings.set('theme', combo.get_active_id())
@@ -259,49 +186,27 @@ class SettingsDialog(Gtk.Dialog):
         )
     
     def _on_row_clicked(self, gesture, n_press, x, y, check):
-            """Handle clickable row"""
-            if isinstance(check, Gtk.CheckButton):
-                check.set_active(not check.get_active())
-        
-    def on_notifications_toggled(self, check, param):
-            """Handle notifications toggle"""
-            self.deadline_box.set_sensitive(check.get_active())
-        
+        """Handle clickable row"""
+        if isinstance(check, Gtk.CheckButton):
+            check.set_active(not check.get_active())
+    
     def on_reset_setting(self, button, setting_key, widget):
-            """Reset a single setting to its default value"""
-            default_value = self.settings.default_settings[setting_key]
-            self.settings.reset_setting(setting_key)
-            
-            if isinstance(widget, Gtk.CheckButton):
-                widget.set_active(default_value)
-            elif isinstance(widget, Gtk.SpinButton):
-                widget.set_value(default_value)
-            elif isinstance(widget, Gtk.ComboBoxText):
-                widget.set_active_id(default_value)
-                
-            # Remove the reset button
-            button.get_parent().remove(button)
+        """Reset a single setting to its default value"""
+        default_value = self.settings.default_settings[setting_key]
+        self.settings.reset_setting(setting_key)
         
-    def on_reset_clicked(self, button):
-            """Reset all settings to defaults"""
-            dialog = Gtk.MessageDialog(
-                transient_for=self,
-                modal=True,
-                message_type=Gtk.MessageType.QUESTION,
-                buttons=Gtk.ButtonsType.YES_NO,
-                text="Reset All Settings?"
-            )
-            dialog.format_secondary_text(
-                "This will reset all settings to their default values. This action cannot be undone."
-            )
+        if isinstance(widget, Gtk.CheckButton):
+            widget.set_active(default_value)
+        elif isinstance(widget, Gtk.ComboBoxText):
+            widget.set_active_id(default_value)
             
-            response = dialog.run()
-            dialog.destroy()
-            
-            if response == Gtk.ResponseType.YES:
-                self.settings.reset()
-                self._on_response(None, Gtk.ResponseType.OK)  # Close settings dialog
+        # Remove the reset button
+        button.get_parent().remove(button)
         
+        if response == Gtk.ResponseType.YES:
+            self.settings.reset()
+            self._on_response(None, Gtk.ResponseType.OK)  # Close settings dialog
+    
     def _on_response(self, button, response):
-            """Handle dialog response"""
-            self.emit("response", response)
+        """Handle dialog response"""
+        self.emit("response", response)

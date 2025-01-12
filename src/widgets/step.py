@@ -68,6 +68,8 @@ class StepWidget(Gtk.Box):
         self.label.set_wrap(True)
         self.label.set_wrap_mode(Pango.WrapMode.WORD_CHAR)
         self.label.set_size_request(400, -1)
+        self.label.set_selectable(True)
+        self.label.set_can_focus(True)
         self.update_label_style()
         label_box.append(self.label)
 
