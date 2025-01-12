@@ -7,10 +7,10 @@ mkdir -p "$HOME/.config/goaltracker"
 
 # Set environment variables
 export GOAL_TRACKER_DATADIR="@PKGDATADIR@"
-export PYTHONPATH="@PKGDATADIR@:$PYTHONPATH"
+export PYTHONPATH="@PKGDATADIR@"
 
-# Change to user data directory
-cd "$HOME/.local/share/goaltracker"
+# Change to data directory
+cd "@PKGDATADIR@"
 
-# Execute app
-exec "@PYTHON@" "@PKGDATADIR@/goal_tracker.py" "$@"
+# Execute app with debug output
+exec "@PYTHON@" "@PKGDATADIR@/main.py" "$@" 2>&1 | tee "$HOME/.cache/goaltracker/launch.log"

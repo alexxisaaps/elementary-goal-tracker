@@ -62,6 +62,25 @@
   </content_rating>
 
   <releases>
+    <release version="1.2.0" date="2024-01-12">
+      <description>
+        <p>Major code reorganization and improvements:</p>
+        <ul>
+          <li>Restructured codebase into modular components</li>
+          <li>Improved installation and packaging system</li>
+          <li>Enhanced application reliability and maintainability</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.1.0" date="2024-01-10">
+      <description>
+        <p>Refinements and optimizations:</p>
+        <ul>
+          <li>Various UI polish and refinements</li>
+          <li>Code cleanup and optimization</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.0.1" date="2024-01-09">
       <description>
         <p>Bug fixes:</p>
